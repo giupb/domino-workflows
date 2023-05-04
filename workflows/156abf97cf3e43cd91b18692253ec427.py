@@ -32,7 +32,7 @@ with DAG(**dag_config) as dag:
         workflow_shared_storage={'source': 'AWS S3', 'base_folder': 'folder-02', 'mode': 'Read/Write', 'provider_options': {'bucket': 'domino-shared-storage'}, 'storage_repository_id': 1},
         container_resources={'requests': {'cpu': '100.0m', 'memory': '128.0Mi'}, 'limits': {'cpu': '100.0m', 'memory': '128.0Mi'}, 'use_gpu': False},
         piece={'name': 'TextSummarizerPiece', 'source_image': 'ghcr.io/tauffer-consulting/openai_domino_pieces:0.1.2-group0', 'repository_id': 2},
-        piece_input_kwargs={'text': None, 'openai_model': ['gpt-3.5-turbo', 4000], 'chunk_size': 1000, 'chunk_overlap_rate': 0.2, 'max_tokens': 500, 'temperature': 0.2}
+        piece_input_kwargs={'text': {'type': 'fromUpstream', 'upstream_task_id': 'task_AudioTranscriptionPiece_0', 'output_arg': 'transcription_result'}, 'openai_model': ['gpt-3.5-turbo', 4000], 'chunk_size': 1000, 'chunk_overlap_rate': 0.2, 'max_tokens': 500, 'temperature': 0.2}
     )()
 
     task_AudioTranscriptionPiece_0.set_upstream([globals()[t] for t in ['task_YoutubeDownloadPiece_0']])
